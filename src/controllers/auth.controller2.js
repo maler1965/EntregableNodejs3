@@ -99,17 +99,17 @@ exports.findAllTransfers = catchAsync(async (req, res, next) => {
     );
   }
 
-  const usersAccountNumber = users[0].accountNumber;
+  //const usersAccountNumber = sessionUser.id //users[0].accountNumber;
 
   const transferAllReceiver = await Transfer.findAll({
     where: {
-      receiverUserId: usersAccountNumber,
+      receiverUserId: sessionUser.id,
     },
   });
 
   const transferAllSender = await Transfer.findAll({
     where: {
-      senderUserId: usersAccountNumber,
+      senderUserId: sessionUser.id,
     },
   });
 
@@ -121,35 +121,41 @@ exports.findAllTransfers = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
-  const { senderUserId, receiverUserId, amount } = req.body;
+  const { senderAccountNumber, receiverAccountNumber, amount } = req.body;
 
-  if (senderUserId === receiverUserId) {
+  if (senderAccountNumber === receiverAccountNumber) {
     return next(new AppError('The accountNumber cannot be equals', 400));
   }
 
   const userSender = await User.findOne({
     where: {
-      accountNumber: senderUserId,
+      accountNumber: senderAccountNumber,
       status: 'active',
     },
   });
 
   if (!userSender) {
     return next(
-      new AppError(`User with senderUserId: ${senderUserId} not found`, 404)
+      new AppError(
+        `User with senderAccountNumber: ${senderAccountNumber} not found`,
+        404
+      )
     );
   }
 
   const userReceiver = await User.findOne({
     where: {
-      accountNumber: receiverUserId,
+      accountNumber: receiverAccountNumber,
       status: 'active',
     },
   });
 
   if (!userReceiver) {
     return next(
-      new AppError(`User with receiverUserId: ${receiverUserId} not found`, 404)
+      new AppError(
+        `User with receiverAccountNumber: ${receiverAccountNumber} not found`,
+        404
+      )
     );
   }
 
@@ -177,8 +183,8 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   });
 
   const userTransfer = await Transfer.create({
-    senderUserId: senderUserId,
-    receiverUserId: receiverUserId,
+    senderUserId: userSender.id,
+    receiverUserId: userReceiver.id,
     amount: amount,
   });
 
@@ -189,19 +195,20 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
       id: userReceiver.id,
       name: userReceiver.name,
       accountNumber: userReceiver.accountNumber,
-      amount: userReceiver.amount,
     },
     userSender: {
       id: userSender.id,
       name: userSender.name,
       accountNumber: userSender.accountNumber,
-      amount: userSender.amount,
+      currentAmount: userSender.amount,
     },
 
     Transfers: {
       id: userTransfer.id,
-      userSender: userTransfer.senderUserId,
-      userReceiverr: userTransfer.receiverUserId,
+      senderUserId: userTransfer.senderUserId,
+      senderAccountNumber: userSender.accountNumber,
+      receiverUserId: userTransfer.receiverUserId,
+      receiverAccountNumber: userReceiver.accountNumber,
       amount: userTransfer.amount,
     },
   });

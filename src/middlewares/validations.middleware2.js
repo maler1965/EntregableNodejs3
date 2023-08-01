@@ -55,14 +55,18 @@ exports.updatePasswordValidation = [
     .withMessage('amount is required')
     .isInt()
     .withMessage('Amount must be an integer'),
-  body('senderUserId')
+  body('senderAccountNumber')
     .notEmpty()
-    .withMessage('accountNumber is required')
+    .withMessage(
+      'accountNumber is required, example: "senderAccountNumber": "your accountNumber" '
+    )
     .isInt()
     .withMessage('accountNumber must be an integer'),
-  body('receiverUserId')
+  body('receiverAccountNumber')
     .notEmpty()
-    .withMessage('accountNumber is required')
+    .withMessage(
+      'accountNumber is required, example: "receiverAccountNumber": "the accountNumber" '
+    )
     .isInt()
     .withMessage('accountNumber must be an integer'),
   validFields,
