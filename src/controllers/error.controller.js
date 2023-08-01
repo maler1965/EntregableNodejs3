@@ -27,14 +27,13 @@ const sendErrorDev = (err, res) => {
 
 const sendErrorProd = (err, res) => {
   console.log(err);
-  //operational, trusted error: send message to client
+
   if (err.isOperational) {
     return res.status(err.statusCode).json({
       status: err.status,
       message: err.message,
     });
   } else {
-    //programming or other unknown error: don't leak error detail
     return res.status(500).json({
       status: 'fail',
       message: 'Something went very wrong!',
@@ -53,10 +52,10 @@ const globalErrorHander = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'production') {
     let error = err;
     if (err.parent?.code === '22001') error = handleCastError22001();
-    if (err.parent?.code === '22P02') error = handleCastError22P02(); //es un error de tipo de dato
+    if (err.parent?.code === '22P02') error = handleCastError22P02();
     if (err.parent?.code === '23505') error = handleCastError23505();
-    if (err.name === 'JsonWebTokenError') error = handleJWTError(); //no es el token original
-    if (err.name === 'TokenExpiredError') error = handleJWTExpiredError(); // expiro el tiempo de token valido
+    if (err.name === 'JsonWebTokenError') error = handleJWTError();
+    if (err.name === 'TokenExpiredError') error = handleJWTExpiredError();
 
     sendErrorProd(error, res);
   }

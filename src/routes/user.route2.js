@@ -1,9 +1,7 @@
 const express = require('express');
 
-//controllers
 const authController = require('./../controllers/auth.controller2');
 
-//middlewares
 const validationMiddleware = require('./../middlewares/validations.middleware2');
 const userMiddleware = require('./../middlewares/user.middleware');
 const authMiddleware = require('./../middlewares/auth.middleware');
@@ -23,13 +21,12 @@ router.post(
 );
 
 router.use(authMiddleware.protect);
-/**/
+
 router.get(
   '/:id/history',
-  //validationMiddleware.updatePasswordValidation,
   userMiddleware.validUser,
   authMiddleware.protectAccountOwner,
-  authController.findAllUsers //updatePassword
+  authController.findAllTransfers
 );
 
 module.exports = router;

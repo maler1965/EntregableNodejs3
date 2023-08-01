@@ -1,5 +1,6 @@
 const { body, validationResult } = require('express-validator');
 
+//valid
 const validFields = (req, res, next) => {
   const errors = validationResult(req);
 
@@ -26,7 +27,7 @@ exports.createUserValidation = [
     .withMessage('Password is required')
     .isLength({ min: 8 })
     .withMessage('Password must have a least 8 characters')
-    .matches(/[a-zA-Z]/) //la contrasena debe tener al menos una letra
+    .matches(/[a-zA-Z]/)
     .withMessage('Password must have cotain a least one letter'),
 
   validFields,

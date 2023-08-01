@@ -5,9 +5,7 @@ const morgan = require('morgan');
 const AppError = require('./utils/appError');
 const globalErrorHander = require('./controllers/error.controller');
 
-//routes
 const userRoutes = require('./routes/user.route2');
-const authRoutes = require('./routes/auth.route');
 const transfersRouter = require('./routes/transfer.route');
 
 const app = express();
@@ -19,9 +17,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-//routes
 app.use('/api/v1/users', userRoutes);
-app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/transfers', transfersRouter);
 
 app.all('*', (req, res, next) => {

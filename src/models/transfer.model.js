@@ -7,14 +7,11 @@ const Transfer = db.define('usersTransfer', {
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
-    //unique: false,
   },
   amount: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-
-  /**/
   senderUserId: {
     type: DataTypes.INTEGER,
     allowNull: false,
