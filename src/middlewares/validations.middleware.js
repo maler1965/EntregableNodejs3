@@ -49,7 +49,7 @@ exports.loginUserValidation = [
   validFields,
 ];
 
-exports.updatePasswordValidation = [
+exports.updateValidation = [
   body('amount')
     .notEmpty()
     .withMessage('amount is required')

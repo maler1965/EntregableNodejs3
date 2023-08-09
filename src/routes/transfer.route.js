@@ -1,12 +1,20 @@
 const express = require('express');
-const authController = require('../controllers/auth.controller2');
-const validationMiddleware = require('../middlewares/validations.middleware2');
+
+//Controller
+const transferController = require('../controllers/transfer.controller');
+
+//Middleware
+const validationMiddleware = require('../middlewares/validations.middleware');
+const authMiddleware = require('../middlewares/auth.middleware');
+
 const router = express.Router();
+
+router.use(authMiddleware.protect);
 
 router.post(
   '/',
-  validationMiddleware.updatePasswordValidation,
-  authController.updatePassword
+  validationMiddleware.updateValidation,
+  transferController.updateTransfer
 );
 
 module.exports = router;
